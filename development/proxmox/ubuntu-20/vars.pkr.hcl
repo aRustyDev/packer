@@ -22,3 +22,8 @@ variable "ssh_pass" {
   description = "SSH Password"
   default     = "packer"
 }
+variable "vm_name" {
+  type        = string
+  description = "VM Name"
+  default     = "packer_hostname"
+}

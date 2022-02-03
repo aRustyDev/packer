@@ -48,11 +48,13 @@ source "proxmox-iso" "proxmox-ubuntu-20" {
   template_description = "packer generated ubuntu-20.04.3-server-amd64"
   unmount_iso          = true
 
-  pool    = "packer"
-  memory  = 4096
-  cores   = 1
-  sockets = 1
-  os      = "l26"
+  pool       = "packer"
+  memory     = 4096
+  cores      = 1
+  sockets    = 1
+  os         = "l26"
+  qemu_agent = true
+  cloud_init = true
   # scsi_controller = "virtio-scsi-pci"
   disks {
     type              = "scsi"
