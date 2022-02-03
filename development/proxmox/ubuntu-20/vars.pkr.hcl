@@ -1,7 +1,7 @@
 variable "pm_user" {
   type        = string
   description = "Proxmox User Name"
-  default     = "root@pam!<api-tag>"
+  default     = "packer@pam!<api-tag>"
 }
 variable "pm_pass" {
   type        = string
