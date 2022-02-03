@@ -1,0 +1,5 @@
+* automate password hash generation
+    - need to supply to preseed.yaml
+    - `openssl passwd -6 -salt xyz madalynn`
+* strictly define differences between ubuntu editions
+* find legacy windows images
