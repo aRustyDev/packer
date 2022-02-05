@@ -11,3 +11,5 @@ readthedocs [NoCloud](https://cloudinit.readthedocs.io/en/latest/topics/datasour
 readthedocs [cloud-init](https://cloudinit.readthedocs.io/en/latest/topics/modules.html#write-files)  
 
 https://git.kernel.org/pub/scm/libs/klibc/klibc.git/tree/usr/kinit/ipconfig/README.ipconfig
+
+https://askubuntu.com/questions/1360674/assign-ip-to-ubuntu-20-04-during-installation-packer-cloud-init-context
