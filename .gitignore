@@ -1,2 +1,4 @@
 packer_cache/
 *.auto.pkrvars.hcl
+random/
+questions/
