@@ -8,10 +8,10 @@ packer {
 }
 
 source "proxmox-iso" "proxmox-ubuntu-18" {
-  proxmox_url = "https://192.168.0.42:8006/api2/json"
-  vm_name     = "packer-ubuntu-18"
-  iso_url      = "http://192.168.0.144/ubuntu-18.04.6-live-server-amd64.iso"
-  iso_checksum = "f8e3086f3cea0fb3fefb29937ab5ed9d19e767079633960ccb50e76153effc98"
+  proxmox_url      = "https://192.168.0.42:8006/api2/json"
+  vm_name          = "packer-ubuntu-18"
+  iso_url          = "http://192.168.0.144/ubuntu-18.04.6-live-server-amd64.iso"
+  iso_checksum     = "6c647b1ab4318e8c560d5748f908e108be654bad1e165f7cf4f3c1fc43995934"
   username         = "${var.pm_user}"
   password         = "${var.pm_pass}"
   token            = "${var.pm_token}"
@@ -24,7 +24,7 @@ source "proxmox-iso" "proxmox-ubuntu-18" {
   ssh_pty                = true
   ssh_handshake_attempts = 18
 
-  boot_wait      = "5s"
+  boot_wait = "5s"
   # http_directory = "http" # Starts a local http server, serves Preseed file
   boot_command = [
     "<esc><wait><esc><wait><f6><wait><esc><wait>",
@@ -34,7 +34,7 @@ source "proxmox-iso" "proxmox-ubuntu-18" {
     " autoinstall ds=nocloud-net;s=http://192.168.0.144:80/preseed/ubuntu-18/ ", #Dont specify the file
     "boot",
     "--- <enter>"
-  ] 
+  ]
 
   insecure_skip_tls_verify = true
 
