@@ -7,20 +7,11 @@ packer {
   }
 }
 
-# https://askubuntu.com/questions/122505/how-do-i-create-a-completely-unattended-install-of-ubuntu
-# https://ki1cx.github.io/linux/cryptocurrency/ubuntu-unattended-install/
-# https://github.com/netson/ubuntu-unattended
-
-
 source "proxmox-iso" "proxmox-ubuntu-20" {
   proxmox_url = "https://192.168.0.42:8006/api2/json"
   vm_name     = "packer-ubuntu-20"
-  # iso_url      = "https://releases.ubuntu.com/20.04.3/ubuntu-20.04.3-live-server-amd64.iso"
   iso_url      = "http://192.168.0.144/ubuntu-20.04.3-live-server-amd64.iso"
   iso_checksum = "f8e3086f3cea0fb3fefb29937ab5ed9d19e767079633960ccb50e76153effc98"
-  # vm_name = "packer-freebsd-13"
-  # iso_url          = "http://192.168.0.144/FreeBSD-13.0-RELEASE-amd64-dvd1.iso"
-  # iso_checksum     = "d3df1818c0b90ae8d4c88c447dd158c3c3a3ddada4171ac7b0fe55baa040c821"
   username         = "${var.pm_user}"
   password         = "${var.pm_pass}"
   token            = "${var.pm_token}"
@@ -29,18 +20,21 @@ source "proxmox-iso" "proxmox-ubuntu-20" {
 
   ssh_username           = "${var.ssh_user}"
   ssh_password           = "${var.ssh_pass}"
-  ssh_timeout            = "20m"
+  ssh_timeout            = "24h"
   ssh_pty                = true
   ssh_handshake_attempts = 20
 
   boot_wait      = "5s"
-  http_directory = "http" # Starts a local http server, serves Preseed file
+  # http_directory = "http" # Starts a local http server, serves Preseed file
   boot_command = [
     "<esc><wait><esc><wait><f6><wait><esc><wait>",
     "<bs><bs><bs><bs><bs>",
-    "autoinstall ds=nocloud-net;s=http://{{ .HTTPIP }}:{{ .HTTPPort }}/",
+    "ip=${cidrhost("192.168.0.0/24", 9)}::${cidrhost("192.168.0.0/24", 1)}:${cidrnetmask("192.168.0.0/24")}::::${cidrhost("192.168.0.0/24", 1)} ",
+    # " autoinstall ds=nocloud-net;s=http://{{ .HTTPIP }}:{{ .HTTPPort }}/http/ ", #Dont specify the file
+    " autoinstall ds=nocloud-net;s=http://192.168.0.144:80/preseed/ubuntu-20/ ", #Dont specify the file
+    "boot",
     "--- <enter>"
-  ]
+  ] 
 
   insecure_skip_tls_verify = true
 
@@ -54,8 +48,6 @@ source "proxmox-iso" "proxmox-ubuntu-20" {
   sockets    = 1
   os         = "l26"
   qemu_agent = true
-  cloud_init = true
-  # scsi_controller = "virtio-scsi-pci"
   disks {
     type              = "scsi"
     disk_size         = "30G"
@@ -67,7 +59,6 @@ source "proxmox-iso" "proxmox-ubuntu-20" {
     bridge   = "vmbr0"
     model    = "virtio"
     firewall = true
-    vlan_tag = 1
   }
 }
 
