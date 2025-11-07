@@ -1,0 +1,173 @@
+{
+  "matrix_name": "Build Pipeline Integration Matrix",
+  "columns": [
+    "format",
+    "role_base_builder",
+    "role_intermediate_layering",
+    "role_distribution_artifact",
+    "role_archival",
+    "notes"
+  ],
+  "rows": [
+    {
+      "format": "raw",
+      "role_base_builder": "preferred canonical",
+      "role_intermediate_layering": "via external snapshots (LVM/ZFS) if needed",
+      "role_distribution_artifact": "acceptable (large size)",
+      "role_archival": "excellent (exact bytes + hash)",
+      "notes": "Use as golden source to derive other formats."
+    },
+    {
+      "format": "qcow2",
+      "role_base_builder": "good (fast cloning)",
+      "role_intermediate_layering": "excellent (backing files, overlays)",
+      "role_distribution_artifact": "good (space-efficient)",
+      "role_archival": "acceptable (consider flatten first)",
+      "notes": "Short backing chains; avoid deep snapshot trees in long-term storage."
+    },
+    {
+      "format": "vmdk_streamOptimized",
+      "role_base_builder": "not ideal",
+      "role_intermediate_layering": "no",
+      "role_distribution_artifact": "excellent for OVA export",
+      "role_archival": "fair (distribution-focused)",
+      "notes": "Convert to performance variant for runtime use."
+    },
+    {
+      "format": "vmdk_flat",
+      "role_base_builder": "acceptable",
+      "role_intermediate_layering": "snapshot deltas (VMware)",
+      "role_distribution_artifact": "good (with OVF/OVA)",
+      "role_archival": "good (with descriptor)",
+      "notes": "Choose eagerZeroedThick for performance-critical workloads."
+    },
+    {
+      "format": "vhdx_dynamic",
+      "role_base_builder": "good (Hyper-V)",
+      "role_intermediate_layering": "via avhdx differencing",
+      "role_distribution_artifact": "convert for other platforms",
+      "role_archival": "flatten first recommended",
+      "notes": "Monitor chain depth; convert to fixed for predictable latency."
+    },
+    {
+      "format": "vhdx_fixed",
+      "role_base_builder": "strong for performance",
+      "role_intermediate_layering": "avhdx overlays",
+      "role_distribution_artifact": "convert out for portability",
+      "role_archival": "good",
+      "notes": "Higher initial space; stable performance baseline."
+    },
+    {
+      "format": "vhd_fixed",
+      "role_base_builder": "Azure-specific",
+      "role_intermediate_layering": "avhd (legacy) or convert to vhdx",
+      "role_distribution_artifact": "required for Azure custom image",
+      "role_archival": "acceptable",
+      "notes": "Limit usage to Azure pipeline; migrate to vhdx internally."
+    },
+    {
+      "format": "vdi_dynamic",
+      "role_base_builder": "dev only",
+      "role_intermediate_layering": "VirtualBox snapshots",
+      "role_distribution_artifact": "convert to others",
+      "role_archival": "flatten & compact first",
+      "notes": "Used in developer desktop pipelines; not a canonical source."
+    },
+    {
+      "format": "hdd_parallels",
+      "role_base_builder": "macOS dev only",
+      "role_intermediate_layering": "Parallels snapshots",
+      "role_distribution_artifact": "convert before sharing",
+      "role_archival": "bundle retention (not ideal)",
+      "notes": "Keep internal; export RAW/QCOW2 for portability."
+    },
+    {
+      "format": "dmg",
+      "role_base_builder": "no (distribution only)",
+      "role_intermediate_layering": "no",
+      "role_distribution_artifact": "macOS app/installer",
+      "role_archival": "good for software release",
+      "notes": "Not a VM runtime disk; convert when needed."
+    },
+    {
+      "format": "qcow_v1",
+      "role_base_builder": "avoid",
+      "role_intermediate_layering": "legacy only",
+      "role_distribution_artifact": "convert to qcow2",
+      "role_archival": "convert first",
+      "notes": "Deprecated; migrate promptly."
+    },
+    {
+      "format": "qed",
+      "role_base_builder": "avoid",
+      "role_intermediate_layering": "legacy only",
+      "role_distribution_artifact": "convert to qcow2",
+      "role_archival": "convert first",
+      "notes": "Deprecated; no new usage."
+    },
+    {
+      "format": "vpc",
+      "role_base_builder": "avoid",
+      "role_intermediate_layering": "legacy differencing",
+      "role_distribution_artifact": "convert to vhdx/raw",
+      "role_archival": "retain only for provenance",
+      "notes": "Replace with vhdx."
+    },
+    {
+      "format": "cow",
+      "role_base_builder": "avoid",
+      "role_intermediate_layering": "legacy overlays",
+      "role_distribution_artifact": "convert out",
+      "role_archival": "convert first",
+      "notes": "Superseded by qcow2."
+    },
+    {
+      "format": "avhdx",
+      "role_base_builder": "not base (delta only)",
+      "role_intermediate_layering": "checkpoint deltas",
+      "role_distribution_artifact": "must consolidate",
+      "role_archival": "avoid storing deltas",
+      "notes": "Transient; consolidate before export/backup."
+    },
+    {
+      "format": "avhd",
+      "role_base_builder": "legacy delta only",
+      "role_intermediate_layering": "legacy",
+      "role_distribution_artifact": "consolidate then convert",
+      "role_archival": "avoid",
+      "notes": "Deprecated; migrate to vhdx."
+    },
+    {
+      "format": "cloop",
+      "role_base_builder": "no",
+      "role_intermediate_layering": "no",
+      "role_distribution_artifact": "legacy live media",
+      "role_archival": "historical only",
+      "notes": "Replace with SquashFS or modern image build."
+    },
+    {
+      "format": "ova",
+      "role_base_builder": "no (packaging)",
+      "role_intermediate_layering": "no",
+      "role_distribution_artifact": "excellent",
+      "role_archival": "good (single file + manifest)",
+      "notes": "Generate from flattened runtime disk."
+    },
+    {
+      "format": "ovf_directory",
+      "role_base_builder": "no (descriptor)",
+      "role_intermediate_layering": "no",
+      "role_distribution_artifact": "excellent (multi-file)",
+      "role_archival": "good",
+      "notes": "Better for iterative edits than OVA."
+    },
+    {
+      "format": "box",
+      "role_base_builder": "no (wrapper)",
+      "role_intermediate_layering": "optional inside provider",
+      "role_distribution_artifact": "good for dev Vagrant",
+      "role_archival": "limited (provider-specific)",
+      "notes": "Not canonical; rebuild from RAW/qcow2."
+    }
+  ]
+}
