@@ -1,3 +1,8 @@
+---
+title: mdBook JSON-to-Table Integration
+id: B73E581A-17F3-49DD-97AB-47B76075E258
+---
+
 # mdBook JSON-to-Table Integration
 
 ## Problem
