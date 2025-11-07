@@ -1,4 +1,14 @@
-## Problem
+# Developing an mdBook Plugin
+
+1. Identify the Problem
+2. Identify possible Solutions
+3. Identify possible Approaches to implement the Solution
+4. Create a recommended Path, based on the identified Approaches
+5. Get Buy in / approval from Stakeholders on the recommended Path
+6. Create or Identify Example Code snippets for the recommended Path
+7.
+
+## Identify the Problem
 
 Existing widely-used mdBook preprocessors do not (as of current publicly documented ecosystem) provide a generic “load arbitrary JSON and render a table” feature out of the box.
 
@@ -94,168 +104,7 @@ Example no-op preprocessor
 
 ### Example no-op preprocessor
 
-```rust
-// nop-preprocessors.rs
-
-use crate::nop_lib::Nop;
-use clap::{App, Arg, ArgMatches};
-use mdbook::book::Book;
-use mdbook::errors::Error;
-use mdbook::preprocess::{CmdPreprocessor, Preprocessor, PreprocessorContext};
-use semver::{Version, VersionReq};
-use std::io;
-use std::process;
-
-pub fn make_app() -> App<'static> {
-    App::new("nop-preprocessor")
-        .about("A mdbook preprocessor which does precisely nothing")
-        .subcommand(
-            App::new("supports")
-                .arg(Arg::new("renderer").required(true))
-                .about("Check whether a renderer is supported by this preprocessor"),
-        )
-}
-
-fn main() {
-    let matches = make_app().get_matches();
-
-    // Users will want to construct their own preprocessor here
-    let preprocessor = Nop::new();
-
-    if let Some(sub_args) = matches.subcommand_matches("supports") {
-        handle_supports(&preprocessor, sub_args);
-    } else if let Err(e) = handle_preprocessing(&preprocessor) {
-        eprintln!("{}", e);
-        process::exit(1);
-    }
-}
-
-fn handle_preprocessing(pre: &dyn Preprocessor) -> Result<(), Error> {
-    let (ctx, book) = CmdPreprocessor::parse_input(io::stdin())?;
-
-    let book_version = Version::parse(&ctx.mdbook_version)?;
-    let version_req = VersionReq::parse(mdbook::MDBOOK_VERSION)?;
-
-    if !version_req.matches(&book_version) {
-        eprintln!(
-            "Warning: The {} plugin was built against version {} of mdbook, \
-             but we're being called from version {}",
-            pre.name(),
-            mdbook::MDBOOK_VERSION,
-            ctx.mdbook_version
-        );
-    }
-
-    let processed_book = pre.run(&ctx, book)?;
-    serde_json::to_writer(io::stdout(), &processed_book)?;
-
-    Ok(())
-}
-
-fn handle_supports(pre: &dyn Preprocessor, sub_args: &ArgMatches) -> ! {
-    let renderer = sub_args.value_of("renderer").expect("Required argument");
-    let supported = pre.supports_renderer(renderer);
-
-    // Signal whether the renderer is supported by exiting with 1 or 0.
-    if supported {
-        process::exit(0);
-    } else {
-        process::exit(1);
-    }
-}
-
-/// The actual implementation of the `Nop` preprocessor. This would usually go
-/// in your main `lib.rs` file.
-mod nop_lib {
-    use super::*;
-
-    /// A no-op preprocessor.
-    pub struct Nop;
-
-    impl Nop {
-        pub fn new() -> Nop {
-            Nop
-        }
-    }
-
-    impl Preprocessor for Nop {
-        fn name(&self) -> &str {
-            "nop-preprocessor"
-        }
-
-        fn run(&self, ctx: &PreprocessorContext, book: Book) -> Result<Book, Error> {
-            // In testing we want to tell the preprocessor to blow up by setting a
-            // particular config value
-            if let Some(nop_cfg) = ctx.config.get_preprocessor(self.name()) {
-                if nop_cfg.contains_key("blow-up") {
-                    anyhow::bail!("Boom!!1!");
-                }
-            }
-
-            // we *are* a no-op preprocessor after all
-            Ok(book)
-        }
-
-        fn supports_renderer(&self, renderer: &str) -> bool {
-            renderer != "not-supported"
-        }
-    }
-
-    #[cfg(test)]
-    mod test {
-        use super::*;
-
-        #[test]
-        fn nop_preprocessor_run() {
-            let input_json = r##"[
-                {
-                    "root": "/path/to/book",
-                    "config": {
-                        "book": {
-                            "authors": ["AUTHOR"],
-                            "language": "en",
-                            "multilingual": false,
-                            "src": "src",
-                            "title": "TITLE"
-                        },
-                        "preprocessor": {
-                            "nop": {}
-                        }
-                    },
-                    "renderer": "html",
-                    "mdbook_version": "0.4.21"
-                },
-                {
-                    "sections": [
-                        {
-                            "Chapter": {
-                                "name": "Chapter 1",
-                                "content": "# Chapter 1\n",
-                                "number": [1],
-                                "sub_items": [],
-                                "path": "chapter_1.md",
-                                "source_path": "chapter_1.md",
-                                "parent_names": []
-                            }
-                        }
-                    ],
-                    "__non_exhaustive": null
-                }
-            ]"##;
-            let input_json = input_json.as_bytes();
-
-            let (ctx, book) = mdbook::preprocess::CmdPreprocessor::parse_input(input_json).unwrap();
-            let expected_book = book.clone();
-            let result = Nop::new().run(&ctx, book);
-            assert!(result.is_ok());
-
-            // The nop-preprocessor should not have made any changes to the book content.
-            let actual_book = result.unwrap();
-            assert_eq!(actual_book, expected_book);
-        }
-    }
-}
-```
+- .aim/example/snippets/mdbook-plugin-nop-preprocessor.rs
 
 ### Hints For Implementing A Preprocessor
 
@@ -269,33 +118,7 @@ The chapter.content is just a string which happens to be markdown. While it’s 
 
 The following code block shows how to remove all emphasis from markdown, without accidentally breaking the document.
 
-```rust
-fn remove_emphasis(
-num_removed_items: &mut usize,
-chapter: &mut Chapter,
-) -> Result<String> {
-let mut buf = String::with_capacity(chapter.content.len());
-
-    let events = Parser::new(&chapter.content).filter(|e| {
-        let should_keep = match *e {
-            Event::Start(Tag::Emphasis)
-            | Event::Start(Tag::Strong)
-            | Event::End(Tag::Emphasis)
-            | Event::End(Tag::Strong) => false,
-            _ => true,
-        };
-        if !should_keep {
-            *num_removed_items += 1;
-        }
-        should_keep
-    });
-
-    cmark(events, &mut buf, None).map(|_| buf).map_err(|err| {
-        Error::from(format!("Markdown serialization failed: {}", err))
-    })
-
-}
-```
+- .aim/example/snippets/mdbook-plugin-fn-remove_emphasis.rs
 
 For everything else, have a look at [the complete example](https://github.com/rust-lang/mdBook/blob/master/examples/nop-preprocessor.rs).
 
@@ -303,20 +126,4 @@ For everything else, have a look at [the complete example](https://github.com/ru
 
 The fact that mdBook utilizes stdin and stdout to communicate with the preprocessors makes it easy to implement them in a language other than Rust. The following code shows how to implement a simple preprocessor in Python, which will modify the content of the first chapter. The example below follows the configuration shown above with `preprocessor.foo.command` actually pointing to a Python script.
 
-```python
-import json
-import sys
-
-if **name** == '**main**':
-if len(sys.argv) > 1: # we check if we received any argument
-if sys.argv[1] == "supports": # then we are good to return an exit status code of 0, since the other argument will just be the renderer's name
-sys.exit(0)
-
-    # load both the context and the book representations from stdin
-    context, book = json.load(sys.stdin)
-    # and now, we can just modify the content of the first chapter
-    book['sections'][0]['Chapter']['content'] = '# Hello'
-    # we are done with the book's modification, we can just print it to stdout,
-    print(json.dumps(book))
-
-```
+- .aim/example/snippets/mdbook-plugin-preprocessor.py
