@@ -9,3 +9,6 @@ These rules are broken down into categories.
 ## Documentation
 
 - When documenting
+  - ensure to provide citations in `.aim/todo/docs/citations/README.md` for any factual claims or technical details.
+  - every todo item in `.aim/todo/docs/` requires a `meta.json` with the `id` value.
+    - This value is used to track related documents across the project.
