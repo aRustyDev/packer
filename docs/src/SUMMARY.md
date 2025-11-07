@@ -1,8 +1,7 @@
 # Summary
 
-- [Sources](./sources/README.md)
-  - [ISOs](./sources/iso.md)
 - [Pipelines](./pipelines/README.md)
+  - [Source ISOs](./pipelines/source-iso.md)
   - [Outputs](./pipelines/artifacts.md)
 - [Contexts](./explain/README.md)
   - [Container Formats](./explain/container-formats/README.md)

@@ -1,6 +1,0 @@
----
-title: Image Sources
-assumed_roles:
-  - .aim/roles/techdocs-engineer.md
-  - .aim/roles/pipeline-engineer.md
----
