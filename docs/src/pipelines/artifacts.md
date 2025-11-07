@@ -1,6 +1,7 @@
 ---
-title: Image Sources
+title: Pipeline Outputs
 assumed_roles:
-  - .aim/roles/techdocs-engineer.md
   - .aim/roles/pipeline-engineer.md
 ---
+
+# Outputs

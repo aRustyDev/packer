@@ -1,3 +1,9 @@
+---
+title: BOX
+assumed_roles:
+  - .aim/roles/virtualization-engineer.md
+---
+
 # BOX
 
 - BOX: Packaging wrapper; inside may be VMDK/VDI/QCOW2/etc.

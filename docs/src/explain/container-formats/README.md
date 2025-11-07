@@ -1,3 +1,9 @@
+---
+title: Container Formats
+assumed_roles:
+  - .aim/roles/techdocs-engineer.md
+---
+
 # Container Formats
 
 ## Non-VM but adjacent (avoid confusion)

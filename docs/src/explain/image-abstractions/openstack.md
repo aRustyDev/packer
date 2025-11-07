@@ -1,3 +1,9 @@
+---
+title: OpenStack Glance Image
+assumed_roles:
+  - .aim/roles/virtualization-engineer.md
+---
+
 # OpenStack Glance Image
 
 - OpenStack Glance Image:

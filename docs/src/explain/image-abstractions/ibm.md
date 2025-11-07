@@ -1,3 +1,9 @@
+---
+title: IBM Cloud
+assumed_roles:
+  - .aim/roles/virtualization-engineer.md
+---
+
 # IBM Cloud
 
 - IBM Cloud, Oracle Cloud Infrastructure:

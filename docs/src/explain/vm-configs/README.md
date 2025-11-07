@@ -1,3 +1,9 @@
+---
+title: VM Configuration Files
+assumed_roles:
+  - .aim/roles/techdocs-engineer.md
+---
+
 # VM Configuration Files
 
 ## Hypervisor / VM configuration & snapshot metadata

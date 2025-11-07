@@ -1,3 +1,10 @@
+---
+title: Exhaustive Survey of VM Disk and Image Formats
+assumed_roles:
+  - .aim/roles/virtualization-engineer.md
+  - .aim/roles/techdocs-engineer.md
+---
+
 # Contexts
 
 Below is a structured survey of the major (and many minor) virtual machine image and virtual disk formats, plus related packaging and metadata artifacts.

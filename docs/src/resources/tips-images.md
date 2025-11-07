@@ -1,3 +1,9 @@
+---
+title: Tips on Images
+assumed_roles:
+  - .aim/roles/techdocs-engineer.md
+---
+
 # Tips: Images
 
 Practical advice:

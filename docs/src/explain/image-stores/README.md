@@ -1,3 +1,9 @@
+---
+title: Image Stores Explained
+assumed_roles:
+  - .aim/roles/techdocs-engineer.md
+---
+
 # Image Stores Explained
 
 ## Backend block/image stores (infrastructure-level “images”)

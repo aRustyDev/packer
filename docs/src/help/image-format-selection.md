@@ -1,3 +1,9 @@
+---
+title: Image Format Selection
+assumed_roles:
+  - .aim/roles/techdocs-engineer.md
+---
+
 # Image Format Selection
 
 ## Selection criteria summary (how to pick a format)

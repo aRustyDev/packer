@@ -2,8 +2,8 @@
 
 - [Sources](./sources/README.md)
   - [ISOs](./sources/iso.md)
-- [Outputs](./artifacts.md)
 - [Pipelines](./pipelines/README.md)
+  - [Outputs](./pipelines/artifacts.md)
 - [Contexts](./explain/README.md)
   - [Container Formats](./explain/container-formats/README.md)
     - [OCI](./explain/container-formats/oci.md)

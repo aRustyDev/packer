@@ -1,3 +1,9 @@
+---
+title: Snapshotting
+assumed_roles:
+  - .aim/roles/virtualization-engineer.md
+---
+
 # Copy-on-write / snapshot‑capable mechanisms
 
 > These are either inherent features of a format or layering conventions:

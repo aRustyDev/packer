@@ -1,3 +1,9 @@
+---
+title: Azure Managed Images
+assumed_roles:
+  - .aim/roles/virtualization-engineer.md
+---
+
 # Azure Managed Image
 
 - **Azure Managed Image** / Shared Image Gallery:

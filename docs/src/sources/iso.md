@@ -1,3 +1,9 @@
+---
+title: ISO Sources
+assumed_roles:
+  - .aim/roles/pipeline-engineer.md
+---
+
 [ubuntu](https://releases.ubuntu.com/)
 [debian](https://www.debian.org/CD/http-ftp/#stable)
 [rocky-linux](https://rockylinux.org/download)

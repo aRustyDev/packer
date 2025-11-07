@@ -1,3 +1,9 @@
+---
+title: Alibaba
+assumed_roles:
+  - .aim/roles/virtualization-engineer.md
+---
+
 # Alibaba
 
 - Alibaba Cloud ECS:

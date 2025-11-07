@@ -1,3 +1,9 @@
+---
+title: GCE Image
+assumed_roles:
+  - .aim/roles/virtualization-engineer.md
+---
+
 # GCE Image
 
 - **GCE** (Google Compute Engine) Image:
