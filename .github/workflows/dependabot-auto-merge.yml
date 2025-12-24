@@ -1,0 +1,71 @@
+# Dependabot Auto-Merge
+#
+# Automatically approves and merges Dependabot PRs for patch/minor updates.
+# Major updates require human review.
+#
+# Prerequisites:
+# 1. Enable auto-merge in repo settings (Settings → General → Allow auto-merge)
+# 2. Branch protection on main requiring:
+#    - Status checks to pass
+#    - At least 1 approval
+#
+# Security:
+# - Only auto-merges patch/minor updates
+# - Blocks PRs with high-severity vulnerabilities
+# - Major updates always require human review
+
+name: Dependabot Auto-Merge
+
+on: pull_request
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  auto-merge:
+    runs-on: ubuntu-latest
+    if: github.actor == 'dependabot[bot]'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Dependency Review
+        uses: actions/dependency-review-action@v4
+        with:
+          fail-on-severity: high
+
+      - name: Fetch Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Auto-approve patch/minor updates
+        if: steps.metadata.outputs.update-type != 'version-update:semver-major'
+        run: gh pr review --approve "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Enable auto-merge for patch/minor
+        if: steps.metadata.outputs.update-type != 'version-update:semver-major'
+        run: gh pr merge --auto --squash "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Comment on major updates
+        if: steps.metadata.outputs.update-type == 'version-update:semver-major'
+        run: |
+          gh pr comment "$PR_URL" --body "⚠️ **Major version update** - requires manual review.
+
+          **Update type:** ${{ steps.metadata.outputs.update-type }}
+          **Dependency:** ${{ steps.metadata.outputs.dependency-names }}
+          **From:** ${{ steps.metadata.outputs.previous-version }}
+          **To:** ${{ steps.metadata.outputs.new-version }}
+
+          Please review the changelog for breaking changes before approving."
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
